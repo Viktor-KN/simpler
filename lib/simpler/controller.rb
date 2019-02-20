@@ -53,5 +53,9 @@ module Simpler
     def status(code)
       response.status = code.to_i
     end
+
+    def headers
+      @response.headers
+    end
   end
 end
