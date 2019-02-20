@@ -28,10 +28,15 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
-      controller = route.controller.new(env)
-      action = route.action
 
-      make_response(controller, action)
+      if route.nil?
+        response_with_not_found(env)
+      else
+        controller = route.controller.new(env)
+        action = route.action
+
+        make_response(controller, action)
+      end
     end
 
     private
@@ -54,5 +59,9 @@ module Simpler
       controller.make_response(action)
     end
 
+    def response_with_not_found(env)
+      path = env['PATH_INFO']
+      Rack::Response.new("Not found: #{path}", 404, 'Content-Type' => 'text/plain')
+    end
   end
 end
