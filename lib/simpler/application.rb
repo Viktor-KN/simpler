@@ -29,14 +29,13 @@ module Simpler
     def call(env)
       route = @router.route_for(env)
 
-      if route.nil?
-        response_with_not_found(env)
-      else
-        controller = route.controller.new(env)
-        action = route.action
+      return response_with_not_found(env) if route.nil?
 
-        make_response(controller, action)
-      end
+      env['simpler.route_params'] = route.parse_params(env['PATH_INFO'])
+      controller = route.controller.new(env)
+      action = route.action
+
+      make_response(controller, action)
     end
 
     private
