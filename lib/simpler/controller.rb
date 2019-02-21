@@ -52,6 +52,8 @@ module Simpler
     end
 
     def render(template)
+      set_render_params(template) if template.is_a?(Hash)
+
       @request.env['simpler.template'] = template
     end
 
@@ -61,6 +63,13 @@ module Simpler
 
     def headers
       @response.headers
+    end
+
+    def set_render_params(template)
+      case template.keys[0]
+      when :plain
+        headers['Content-Type'] = 'text/plain'
+      end
     end
   end
 end

@@ -10,9 +10,12 @@ module Simpler
     end
 
     def render(binding)
-      template = File.read(template_path)
-
-      ERB.new(template).result(binding)
+      if template.is_a?(Hash)
+        key_val = template.shift
+        send "render_#{key_val[0]}", key_val[1], binding
+      else
+        render_template(binding)
+      end
     end
 
     private
@@ -33,6 +36,19 @@ module Simpler
       path = template || [controller.name, action].join('/')
 
       Simpler.root.join(VIEW_BASE_PATH, "#{path}.html.erb")
+    end
+
+    def render_template(binding)
+      template = File.read(template_path)
+      ERB.new(template).result(binding)
+    end
+
+    def render_plain(text, _binding)
+      text
+    end
+
+    def render_inline(inline_string, binding)
+      ERB.new(inline_string).result(binding)
     end
 
   end
