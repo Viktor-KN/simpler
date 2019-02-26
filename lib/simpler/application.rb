@@ -60,7 +60,7 @@ module Simpler
 
     def response_with_not_found(env)
       path = env['PATH_INFO']
-      Rack::Response.new("Not found: #{path}", 404, 'Content-Type' => 'text/plain')
+      Rack::Response.new("Not found: #{path}", 404, 'Content-Type' => 'text/plain').finish
     end
   end
 end

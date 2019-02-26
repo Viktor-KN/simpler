@@ -30,7 +30,7 @@ module Simpler
     end
 
     def merge_params
-      @request.params.merge!(@request.env['simpler.route_params'])
+      @request.env['simpler.all_params'] = @request.params.merge(@request.env['simpler.route_params'])
     end
 
     def set_default_headers
@@ -48,7 +48,7 @@ module Simpler
     end
 
     def params
-      @request.params
+      @request.env['simpler.all_params']
     end
 
     def render(template)
