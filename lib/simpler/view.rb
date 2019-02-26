@@ -11,7 +11,8 @@ module Simpler
 
     def render(binding)
       if template.is_a?(Hash)
-        send "render_#{template.keys[0]}", template.values[0], binding
+        type, content = template.first
+        send "render_#{type}", content, binding
       else
         render_template(binding)
       end
