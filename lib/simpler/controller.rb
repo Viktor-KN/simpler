@@ -16,8 +16,8 @@ module Simpler
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
-      set_default_headers
       send(action)
+      set_default_headers
       write_response
 
       @response.finish
@@ -34,7 +34,14 @@ module Simpler
     end
 
     def set_default_headers
-      @response['Content-Type'] = 'text/html'
+      if @request.env['simpler.template'].is_a?(Hash)
+        case template.keys[0]
+        when :plain
+          headers['Content-Type'] ||= 'text/plain'
+        end
+      end
+
+      @response['Content-Type'] ||= 'text/html'
     end
 
     def write_response
@@ -63,13 +70,6 @@ module Simpler
 
     def headers
       @response.headers
-    end
-
-    def set_render_params(template)
-      case template.keys[0]
-      when :plain
-        headers['Content-Type'] = 'text/plain'
-      end
     end
   end
 end
