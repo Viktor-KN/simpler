@@ -59,8 +59,6 @@ module Simpler
     end
 
     def render(template)
-      set_render_params(template) if template.is_a?(Hash)
-
       @request.env['simpler.template'] = template
     end
 
