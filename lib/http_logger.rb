@@ -25,20 +25,20 @@ class HttpLogger
   end
 
   def path_and_query(request)
-    if request.query_string.empty?
-      request.path_info
-    else
-      [request.path_info, request.query_string].join('?')
-    end
+    [request.path_info, request.query_string].reject(&:empty?).join('?')
   end
 
 
   def handler_and_action(request)
-    request.env['simpler.controller'].nil? ? "none" : "#{request.env['simpler.controller'].class.name}##{request.env['simpler.action']}"
+    if request.env['simpler.controller'].nil?
+      "none"
+    else
+      "#{request.env['simpler.controller'].class.name}##{request.env['simpler.action']}"
+    end
   end
 
   def params(request)
-      request.env['simpler.all_params'] || request.params
+    request.env['simpler.all_params'] || request.params
   end
 
   def status(response)
